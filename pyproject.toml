@@ -2,7 +2,8 @@
 name = "aslicer"
 version = "0.0.1"
 dependencies = [
-	"pydub==0.25.1"
+	"pydub==0.25.1",
+	"argcomplete==3.6.3"
 ]
 
 [project.scripts]

@@ -11,13 +11,26 @@ supports, according to `pydub` documentation.
 Install can be done by running `pipx install .`.
 
 ```bash
-usage: python3 aslicer.py [options] sample1 sample2 ...
--h/--help		display this help message
--t/--threshold		set threshold for transient detection [default: 3.0]
--i/--keep-intro		keep audio before first detected transient [default: False]
--o/--output		write audio slices to directory argument (implies -d)
--d/--to-dir		write audio slices to directory named after file [default: False]
+usage: aslicer [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT] files [files ...]
 
+audio slicer tool
+
+positional arguments:
+  files                 audio files to slice
+
+options:
+  -h, --help            show this help message and exit
+  -t THRESHOLD, --threshold THRESHOLD
+                        set threshold for transient detection
+  -i, --keep-intro      treat beginning of file as transient
+  -o OUTPUT, --output OUTPUT
+                        write audio slices to directory (implies -d)
+  -d, --to-dir          write audio slices to directory named after file
+  -f FORMAT, --format FORMAT
+                        format of sliced audio clips
+```
+
+```bash
 $ # slice multiple audio files to separate named directories
 $ python3 aslicer.py -d audio1.wav audio2.mp3 audio3.flac
 file: audio1.wav                    transients: 73
