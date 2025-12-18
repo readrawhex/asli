@@ -7,8 +7,6 @@ from pydub import AudioSegment
 
 
 def main():
-    threshold = 3.0
-
     parser = argparse.ArgumentParser(description="audio slicer tool")
     parser.add_argument("-t", "--threshold", type=float, default=3.0, help="set threshold for transient detection")
     parser.add_argument("-i", "--keep-intro", action="store_true", help="treat beginning of file as transient")
