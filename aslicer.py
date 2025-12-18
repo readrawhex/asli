@@ -6,34 +6,6 @@ from pathlib import Path
 from pydub import AudioSegment
 
 
-def help(code: int = None):
-    """
-    Help message. Exit's with status `code` if not None.
-    """
-    print(
-        f"usage: {sys.argv[0]} [options] sample1 sample2 ...", file=sys.stderr
-    )
-    print("-h/--help\t\tdisplay this help message")
-    print(
-        "-t/--threshold\t\tset threshold for transient detection [default: 3.0]",
-        file=sys.stderr,
-    )
-    print(
-        "-i/--keep-intro\t\tkeep audio before first detected transient [default: False]",
-        file=sys.stderr,
-    )
-    print(
-        "-o/--output\t\twrite audio slices to directory argument (implies -d)",
-        file=sys.stderr,
-    )
-    print(
-        "-d/--to-dir\t\twrite audio slices to directory named after file [default: False]",
-        file=sys.stderr,
-    )
-    if code is not None:
-        sys.exit(code)
-
-
 def main():
     keep_intro = False
     output_format = "wav"
