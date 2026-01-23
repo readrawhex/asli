@@ -1,5 +1,5 @@
 [project]
-name = "aslicer"
+name = "asli"
 version = "0.0.1"
 dependencies = [
 	"pydub==0.25.1",
@@ -7,4 +7,4 @@ dependencies = [
 ]
 
 [project.scripts]
-aslicer = "aslicer:main"
+asli = "asli:main"
