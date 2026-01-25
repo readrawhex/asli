@@ -1,6 +1,6 @@
 [project]
 name = "asli"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
 	"pydub==0.25.1",
 	"argcomplete==3.6.3"

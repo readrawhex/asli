@@ -2,6 +2,7 @@ import argparse
 import argcomplete
 import sys
 import os
+import math
 from pathlib import Path
 from pydub import AudioSegment
 from pydub.effects import low_pass_filter, high_pass_filter
@@ -9,12 +10,13 @@ from pydub.effects import low_pass_filter, high_pass_filter
 
 def main():
     parser = argparse.ArgumentParser(description="audio slicer tool")
-    parser.add_argument("-t", "--threshold", type=float, default=3.0, help="set threshold for transient detection")
+    parser.add_argument("-t", "--threshold", type=float, default=2.0, help="set threshold for transient detection [def=2.0]")
     parser.add_argument("-i", "--keep-intro", action="store_true", help="treat beginning of file as transient")
     parser.add_argument("-o", "--output", type=str, help="write audio slices to directory (implies -d)")
     parser.add_argument("-d", "--to-dir", action="store_true", help="write audio slices to directory named after file")
     parser.add_argument("-f", "--format", type=str, default="wav", help="format of sliced audio clips")
-    parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients")
+    parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients, ignores: -d/-r")
+    parser.add_argument("--db", type=float, default=20, help="minimum NEGATIVE db value to treat as transient [def=20]")
     parser.add_argument("--hpf", type=int, help="find transients while applying highpass filter at freq")
     parser.add_argument("--lpf", type=int, help="find transients while applying lowpass filter at freq")
     parser.add_argument("--bpf", type=int, help="find transients while applying bandpass filter at freq")
@@ -34,7 +36,6 @@ def main():
             original_audio = AudioSegment.from_file(f[0], f[2])
             audio = original_audio
 
-            # apply any filtering effects for transient detection only
             if args.lpf is not None:
                 if args.lpf < 0 or args.lpf > 20000:
                     raise Exception("--lpf argument must be between 0 and 20000")
@@ -63,18 +64,22 @@ def main():
                             file=sys.stderr,
                         )
             else:
-                baseline = audio[0].rms
                 a = 0.95
                 maxDeriv = 0.01
                 cooldown = 10
-                cool = 0
+                ref = max(frame.rms for frame in audio)
+                min_db = -args.db
 
+                baseline = audio[0].rms
+                cool = 0
                 for i in range(1, len(audio)):
                     baseline = a * baseline + (1 - a) * audio[i].rms
                     ratio = audio[i].rms / (baseline + 1e-9)
                     deriv = audio[i].rms - audio[i - 1].rms
+                    rms_db = 20 * math.log10((audio[i].rms / ref) + 1e-12)
+
                     if cool == 0:
-                        if ratio > args.threshold and deriv > maxDeriv:
+                        if ratio > args.threshold and deriv > maxDeriv and rms_db >= min_db:
                             transients.append(i)
                             cool = cooldown
                             print(

@@ -11,9 +11,9 @@ supports, according to `pydub` documentation.
 Install can be done by running `pipx install .`.
 
 ```bash
-usage: asli.py [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT]
-               [-e EVERY] [--hpf HPF] [--lpf LPF] [--bpf BPF]
-               files [files ...]
+usage: asli [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT] [-e EVERY]
+            [--db DB] [--hpf HPF] [--lpf LPF] [--bpf BPF]
+            files [files ...]
 
 audio slicer tool
 
@@ -23,7 +23,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -t THRESHOLD, --threshold THRESHOLD
-                        set threshold for transient detection
+                        set threshold for transient detection [def=2.0]
   -i, --keep-intro      treat beginning of file as transient
   -o OUTPUT, --output OUTPUT
                         write audio slices to directory (implies -d)
@@ -31,7 +31,9 @@ options:
   -f FORMAT, --format FORMAT
                         format of sliced audio clips
   -e EVERY, --every EVERY
-                        slice every EVERY seconds instead of at transients
+                        slice every EVERY seconds instead of at transients,
+                        ignores: -d/-r
+  --db DB               minimum NEGATIVE db value to treat as transient [def=20]
   --hpf HPF             find transients while applying highpass filter at freq
   --lpf LPF             find transients while applying lowpass filter at freq
   --bpf BPF             find transients while applying bandpass filter at freq
@@ -43,6 +45,10 @@ $ python3 asli.py -d audio1.wav audio2.mp3 audio3.flac
 file: audio1.wav                    transients: 73
 file: audio2.mp3                    transients: 73
 file: audio3.flac                   transients: 73
+
+$ # slice audio at transients with db > -6.0 db
+$ python3 asli.py --db 6.0 audio1.wav
+file: audio1.wav                    transients: 32
 
 $ # slice audio, detecting transients with a >5.0 change-in-rms ratio
 $ python3 asli.py -t 5.0 audio.wav
