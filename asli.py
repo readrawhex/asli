@@ -15,7 +15,7 @@ def main():
     parser.add_argument("-o", "--output", type=str, help="write audio slices to directory (implies -d)")
     parser.add_argument("-d", "--to-dir", action="store_true", help="write audio slices to directory named after file")
     parser.add_argument("-f", "--format", type=str, default="wav", help="format of sliced audio clips")
-    parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients, ignores: -d/-r")
+    parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients")
     parser.add_argument("--fadeout", action="store_true", help="fade out audio clips")
     parser.add_argument("--fadein", action="store_true", help="fade in audio clips")
     parser.add_argument("--db", type=float, default=20, help="minimum NEGATIVE db value to treat as transient [def=20]")

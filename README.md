@@ -32,8 +32,7 @@ options:
   -f FORMAT, --format FORMAT
                         format of sliced audio clips
   -e EVERY, --every EVERY
-                        slice every EVERY seconds instead of at transients,
-                        ignores: -d/-r
+                        slice every EVERY seconds instead of at transients
   --fadeout             fade out audio clips
   --fadein              fade in audio clips
   --db DB               minimum NEGATIVE db value to treat as transient
