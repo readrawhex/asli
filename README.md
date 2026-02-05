@@ -11,9 +11,10 @@ supports, according to `pydub` documentation.
 Install can be done by running `pipx install .`.
 
 ```bash
-usage: asli [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT] [-e EVERY]
-            [--db DB] [--hpf HPF] [--lpf LPF] [--bpf BPF]
-            files [files ...]
+usage: asli.py [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT]
+               [-e EVERY] [--fadeout] [--fadein] [--db DB] [--hpf HPF]
+               [--lpf LPF] [--bpf BPF]
+               files [files ...]
 
 audio slicer tool
 
@@ -33,7 +34,10 @@ options:
   -e EVERY, --every EVERY
                         slice every EVERY seconds instead of at transients,
                         ignores: -d/-r
-  --db DB               minimum NEGATIVE db value to treat as transient [def=20]
+  --fadeout             fade out audio clips
+  --fadein              fade in audio clips
+  --db DB               minimum NEGATIVE db value to treat as transient
+                        [def=20]
   --hpf HPF             find transients while applying highpass filter at freq
   --lpf LPF             find transients while applying lowpass filter at freq
   --bpf BPF             find transients while applying bandpass filter at freq

@@ -16,6 +16,8 @@ def main():
     parser.add_argument("-d", "--to-dir", action="store_true", help="write audio slices to directory named after file")
     parser.add_argument("-f", "--format", type=str, default="wav", help="format of sliced audio clips")
     parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients, ignores: -d/-r")
+    parser.add_argument("--fadeout", action="store_true", help="fade out audio clips")
+    parser.add_argument("--fadein", action="store_true", help="fade in audio clips")
     parser.add_argument("--db", type=float, default=20, help="minimum NEGATIVE db value to treat as transient [def=20]")
     parser.add_argument("--hpf", type=int, help="find transients while applying highpass filter at freq")
     parser.add_argument("--lpf", type=int, help="find transients while applying lowpass filter at freq")
@@ -101,6 +103,13 @@ def main():
             audio = original_audio
             for i in range(1, len(transients)):
                 seg = audio[transients[i - 1] : transients[i]]
+                if args.fadeout:
+                    if args.fadein:
+                        seg = seg.fade_out(len(seg) // 2).fade_in(len(seg) // 2)
+                    else:
+                        seg = seg.fade_out(len(seg))
+                elif args.fadein:
+                    seg = seg.fade_in(len(seg))
                 seg.export(
                     "{}{}_{}.{}".format(
                         (directory + "/" if directory else ""),
