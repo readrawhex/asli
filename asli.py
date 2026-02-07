@@ -16,6 +16,7 @@ def main():
     parser.add_argument("-d", "--to-dir", action="store_true", help="write audio slices to directory named after file")
     parser.add_argument("-f", "--format", type=str, default="wav", help="format of sliced audio clips")
     parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients")
+    parser.add_argument("-m", "--max-slices", type=int, help="maximum number of slices to write (will skip trailing slices)")
     parser.add_argument("--fadeout", action="store_true", help="fade out audio clips")
     parser.add_argument("--fadein", action="store_true", help="fade in audio clips")
     parser.add_argument("--db", type=float, default=20, help="minimum NEGATIVE db value to treat as transient [def=20]")
@@ -25,6 +26,9 @@ def main():
     parser.add_argument("files", nargs="+", help="audio files to slice")
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
+
+    if args.max_slices <= 0:
+        raise ValueError("'-m/--max-slices' must be a positive value")
 
     try:
         files = []
@@ -101,7 +105,8 @@ def main():
                 os.mkdir(directory)
 
             audio = original_audio
-            for i in range(1, len(transients)):
+            length = min(args.max_slices + 1, len(transients)) if args.max_slices else len(transients)
+            for i in range(1, length):
                 seg = audio[transients[i - 1] : transients[i]]
                 if args.fadeout:
                     if args.fadein:
