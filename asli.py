@@ -17,6 +17,7 @@ def main():
     parser.add_argument("-f", "--format", type=str, default="wav", help="format of sliced audio clips")
     parser.add_argument("-e", "--every", type=float, help="slice every EVERY seconds instead of at transients")
     parser.add_argument("-m", "--max-slices", type=int, help="maximum number of slices to write (will skip trailing slices)")
+    parser.add_argument("-c", "--cooldown", type=float, default=0.01, help="minimum seconds between transients [def=0.01]")
     parser.add_argument("--fadeout", action="store_true", help="fade out audio clips")
     parser.add_argument("--fadein", action="store_true", help="fade in audio clips")
     parser.add_argument("--db", type=float, default=20, help="minimum NEGATIVE db value to treat as transient [def=20]")
@@ -27,7 +28,7 @@ def main():
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
-    if args.max_slices <= 0:
+    if args.max_slices and args.max_slices <= 0:
         raise ValueError("'-m/--max-slices' must be a positive value")
 
     try:
@@ -72,7 +73,7 @@ def main():
             else:
                 a = 0.95
                 maxDeriv = 0.01
-                cooldown = 10
+                cooldown = int(args.cooldown * 1000)
                 ref = max(frame.rms for frame in audio)
                 min_db = -args.db
 
