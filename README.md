@@ -11,10 +11,11 @@ supports, according to `pydub` documentation.
 Install can be done by running `pipx install .`.
 
 ```bash
-usage: asli.py [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT]
-               [-e EVERY] [--fadeout] [--fadein] [--db DB] [--hpf HPF]
-               [--lpf LPF] [--bpf BPF]
-               files [files ...]
+usage: asli [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT] [-e EVERY]
+            [-m MAX_SLICES] [-c COOLDOWN] [--fadeo FADEO] [--fadei FADEI]
+            [--fadeout-all] [--fadein-all] [--db DB] [--hpf HPF] [--lpf LPF]
+            [--bpf BPF]
+            files [files ...]
 
 audio slicer tool
 
@@ -24,7 +25,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -t THRESHOLD, --threshold THRESHOLD
-                        set threshold for transient detection [def=2.0]
+                        set threshold for transient detection [def=3.0]
   -i, --keep-intro      treat beginning of file as transient
   -o OUTPUT, --output OUTPUT
                         write audio slices to directory (implies -d)
@@ -33,8 +34,17 @@ options:
                         format of sliced audio clips
   -e EVERY, --every EVERY
                         slice every EVERY seconds instead of at transients
-  --fadeout             fade out audio clips
-  --fadein              fade in audio clips
+  -m MAX_SLICES, --max-slices MAX_SLICES
+                        maximum number of slices to write (will skip trailing
+                        slices)
+  -c COOLDOWN, --cooldown COOLDOWN
+                        minimum seconds between transients [def=0.05]
+  --fadeo FADEO         add fade out at last FADEO seconds of slice
+  --fadei FADEI         add fade in at first FADEO seconds of slice
+  --fadeout-all         fade out audio clips start to finish (or half with
+                        fade in)
+  --fadein-all          fade in audio clips start to finish (or half with fade
+                        out)
   --db DB               minimum NEGATIVE db value to treat as transient
                         [def=20]
   --hpf HPF             find transients while applying highpass filter at freq
