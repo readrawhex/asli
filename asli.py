@@ -85,6 +85,12 @@ def main():
     parser.add_argument(
         "--bpf", type=int, help="find transients while applying bandpass filter at freq"
     )
+    parser.add_argument(
+        "--trim-end", type=float, help="number of seconds to trim off end of clips",
+    )
+    parser.add_argument(
+        "--trim-start", type=float, help="number of seconds to trim off beginning of clips",
+    )
     parser.add_argument("files", nargs="+", help="audio files to slice")
     argcomplete.autocomplete(parser)
     args = parser.parse_args()
@@ -179,6 +185,20 @@ def main():
             file_num_padding = int(math.log10(length)) + 1
             for i in range(1, length):
                 seg = audio[transients[i - 1] : transients[i]]
+
+                if args.trim_end:
+                    seconds = int(args.trim_end * 1000.0)
+                    if seconds > len(seg) and len(seg) > 2:
+                        seg = seg[0:2]
+                    else:
+                        seg = seg[:-seconds]
+                if args.trim_start:
+                    seconds = int(args.trim_start * 1000.0)
+                    if seconds > len(seg) and len(seg) > 2:
+                        seg = seg[-2:]
+                    else:
+                        seg = seg[seconds:]
+
                 if args.fadeo:
                     seg = seg.fade_out(int(args.fadeo * 1000.0))
                 if args.fadei:

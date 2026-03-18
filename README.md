@@ -14,7 +14,7 @@ Install can be done by running `pipx install .`.
 usage: asli [-h] [-t THRESHOLD] [-i] [-o OUTPUT] [-d] [-f FORMAT] [-e EVERY]
             [-m MAX_SLICES] [-c COOLDOWN] [--fadeo FADEO] [--fadei FADEI]
             [--fadeout-all] [--fadein-all] [--db DB] [--hpf HPF] [--lpf LPF]
-            [--bpf BPF]
+            [--bpf BPF] [--trim-end TRIM_END] [--trim-start TRIM_START]
             files [files ...]
 
 audio slicer tool
@@ -50,6 +50,9 @@ options:
   --hpf HPF             find transients while applying highpass filter at freq
   --lpf LPF             find transients while applying lowpass filter at freq
   --bpf BPF             find transients while applying bandpass filter at freq
+  --trim-end TRIM_END   number of seconds to trim off end of clips
+  --trim-start TRIM_START
+                        number of seconds to trim off beginning of clips
 ```
 
 ```bash
